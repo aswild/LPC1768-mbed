@@ -2,7 +2,7 @@
 
 
 GCC_BIN  = /opt/gcc-arm-none-eabi/bin
-PROJECT  = mbed_project
+PROJECT  = serial_tunnel
 PLATFORM = LPC1768
 OBJDIR   = build
 
