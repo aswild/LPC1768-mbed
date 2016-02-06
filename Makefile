@@ -2,7 +2,7 @@
 
 
 GCC_BIN  = /opt/gcc-arm-none-eabi/bin
-PROJECT  = mbed_project
+PROJECT  = LPC1114ISP
 PLATFORM = LPC1768
 OBJDIR   = build
 
@@ -30,6 +30,12 @@ INCLUDE_PATHS = -I. \
 LIBRARY_PATHS = -L./mbed/TARGET_LPC1768/TOOLCHAIN_GCC_ARM 
 LIBRARIES = -lmbed 
 LINKER_SCRIPT = ./mbed/TARGET_LPC1768/TOOLCHAIN_GCC_ARM/LPC1768.ld
+
+# MODSERIAL options
+INCLUDE_PATHS	+= -I./MODSERIAL
+LIBRARY_PATHS	+= -L./MODSERIAL
+LIBRARIES		+= -lMODSERIAL
+MODSERIAL_LIB	= ./MODSERIAL/libMODSERIAL.a
 
 ############################################################################### 
 AS      = $(GCC_BIN)/arm-none-eabi-as
@@ -77,7 +83,7 @@ all: $(BINFILE) $(PROBJ).hex size
 
 
 clean:
-	#rm -f $(PROJECT).bin $(PROJECT).elf $(PROJECT).hex $(PROJECT).map $(PROJECT).lst $(OBJECTS) $(DEPS)
+	make -C MODSERIAL clean
 	rm -rf $(BINFILE) $(OBJDIR)
 
 upload: all
@@ -90,16 +96,15 @@ $(CPPOBJECTS) : $(OBJDIR)/%.o : %.cpp | $(OBJDIR)
 	@echo -e $(Y)$@$(N)
 	$(CPP) $(CC_FLAGS) $(CC_SYMBOLS) -std=gnu++98 -fno-rtti $(INCLUDE_PATHS) -o $@ $<
 
-
-$(PROJECT).elf: $(OBJECTS) $(SYS_OBJECTS)
-	$(LD) $(LD_FLAGS) -T$(LINKER_SCRIPT) $(LIBRARY_PATHS) -o $@ $^ $(LIBRARIES) $(LD_SYS_LIBS) $(LIBRARIES) $(LD_SYS_LIBS)
-
+$(MODSERIAL_LIB):
+	@echo -e $(Y)"Making all in MODSERIAL"$(N)
+	make -C MODSERIAL all
 
 $(BINFILE): $(PROBJ).elf
 	@echo -e $(Y)$@$(N)
 	$(OBJCOPY) -O binary $< $@
 
-$(PROBJ).elf: $(OBJECTS) $(SYS_OBJECTS)
+$(PROBJ).elf: $(MODSERIAL_LIB) $(OBJECTS) $(SYS_OBJECTS)
 	@echo -e $(Y)$@$(N)
 	$(LD) $(LD_FLAGS) -T$(LINKER_SCRIPT) $(LIBRARY_PATHS) -o $@ $^ $(LIBRARIES) $(LD_SYS_LIBS)
 
