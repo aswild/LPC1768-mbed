@@ -78,12 +78,14 @@ else
 endif
 
 .PHONY: all clean lst size upload
-
 all: $(BINFILE) $(PROBJ).hex size
 
-
-clean:
+.PHONY: modserial modserial-clean
+modserial: $(MODSERIAL_LIB)
+modserial-clean:
 	make -C MODSERIAL clean
+
+clean: modserial-clean
 	rm -rf $(BINFILE) $(OBJDIR)
 
 upload: all
