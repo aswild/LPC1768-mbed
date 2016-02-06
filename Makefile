@@ -49,7 +49,7 @@ SIZE    = $(GCC_BIN)/arm-none-eabi-size
 
 CPU = -mcpu=cortex-m3 -mthumb 
 CC_FLAGS = $(CPU) -c -g -fno-common -fmessage-length=0 -Wall -Wextra -fno-exceptions -ffunction-sections -fdata-sections -fomit-frame-pointer -MMD -MP
-CC_FLAGS += -Wno-unused-parameter
+CC_FLAGS += -Wno-unused-parameter -Wno-write-strings
 CC_SYMBOLS = -DTOOLCHAIN_GCC_ARM \
 			 -DTOOLCHAIN_GCC \
 			 -DMBED_BUILD_TIMESTAMP=1448083447.58 \
