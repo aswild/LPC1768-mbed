@@ -78,10 +78,13 @@ else
 endif
 
 .PHONY: all clean lst size upload
-all: $(BINFILE) $(PROBJ).hex size
+all: modserial $(BINFILE) $(PROBJ).hex size
 
 .PHONY: modserial modserial-clean
-modserial: $(MODSERIAL_LIB)
+modserial:
+	@echo -e $(Y)"Making all in MODSERIAL"$(N)
+	make -C MODSERIAL all
+
 modserial-clean:
 	make -C MODSERIAL clean
 
@@ -97,10 +100,6 @@ $(OBJDIR):
 $(CPPOBJECTS) : $(OBJDIR)/%.o : %.cpp | $(OBJDIR)
 	@echo -e $(Y)$@$(N)
 	$(CPP) $(CC_FLAGS) $(CC_SYMBOLS) -std=gnu++98 -fno-rtti $(INCLUDE_PATHS) -o $@ $<
-
-$(MODSERIAL_LIB):
-	@echo -e $(Y)"Making all in MODSERIAL"$(N)
-	make -C MODSERIAL all
 
 $(BINFILE): $(PROBJ).elf
 	@echo -e $(Y)$@$(N)

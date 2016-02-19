@@ -66,7 +66,7 @@ int isp_flash_write( const char *file_name )
 
     printf( "  opening file: \"%s\"\r\n", file_name );
 
-    if ( NULL == (fp    = fopen( file_name, "rb" )) ) {
+    if ( NULL == (fp    = fopen( file_name, "r" )) ) { // ALLEN - change "rb" to "r" because that makes shit work for whatever reason
         return ( ERROR_AT_FILE_OPEN );
     }
 
